@@ -3,45 +3,96 @@ package com.microservice.reservation.services;
 import com.microservice.reservation.model.Driver;
 import com.microservice.reservation.model.Reservation;
 import com.microservice.reservation.model.Vehicle;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static java.sql.DriverManager.getDriver;
 
 
 @Service
-
+@RestController
+@RequestMapping("/postReservation")
 public class ReservationServices {
+    public static double priceKmCar = 0.05;
 
-    RestTemplate restTemplate = new RestTemplate();
+    static RestTemplate restTemplate = new RestTemplate();
+
+    public static Reservation reservation;
 
 
-    public Driver getDriver(int driver_id) {
+
+    public static Driver getDriver(int driver_id) {
         Driver driver = restTemplate.getForObject("http://192.168.1.251:8080/driver/" + driver_id, Driver.class);
         return driver;
     }
 
-    public Vehicle getVehicle(int vehicle_id) {
+    public static Vehicle getVehicle(int vehicle_id) {
         Vehicle vehicle = restTemplate.getForObject("http://192.168.1.249:8080/vehicle/" + vehicle_id, Vehicle.class);
         return vehicle;
     }
+    public static Vehicle[] getVehicleMaxHp(int fiscalHPower){
+
+        ResponseEntity<Vehicle[]> response = restTemplate.getForEntity("http://192.168.1.249:8080/vehicle/"+ fiscalHPower, Vehicle[].class);
+
+        Vehicle[] vehicles = response.getBody();
+        return  vehicles;
+    }
 
 
-    public long driverAge(int id) {
+    public static double calculatePrice(int id) {
+        double price;
+        if (getVehicle(id).getType().equals("car")) {
+            price = getVehicle(id).getPriceDay() + priceKmCar * reservation.getEstimatedKm()
+                    * getVehicle(id).getDisplacementMotorcycleCm3() * 0.001;
+        } else if (getVehicle(id).getType().equals("moto")) {
+            price = getVehicle(id).getPriceDay() + priceKmCar * reservation.getEstimatedKm()
+                    * getVehicle(id).getDisplacementMotorcycleCm3() * 0.001;
+        } else {
+            price = getVehicle(id).getPriceDay() + 0.05 * reservation.getEstimatedKm() *
+                    priceKmCar * getVehicle(id).getLoadCapacityM3();
+        }
+        return price;
+    }
+    public static long driverAge(int id) {
         Date bornDate = getDriver(id).getBirthDate();
         Date today = new Date();
         long ageDriver = ChronoUnit.YEARS.between(bornDate.toInstant(),today.toInstant());
         return ageDriver;
     }
 
+    public static List<Vehicle> listVehiclesFilterAge(int maxHp, int id){
+        long age=driverAge(id);
+        List<Vehicle> vehicles = List.of(getVehicleMaxHp(maxHp));
+
+        if (age<21 && age>18){
+            getVehicleMaxHp(8);
+        } else if (age<25 && age>25){
+            getVehicleMaxHp(13);
+        }
+        return vehicles;
+    }
+
+
+
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

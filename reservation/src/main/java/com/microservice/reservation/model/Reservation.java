@@ -13,14 +13,18 @@ private Integer id;
 private Date pickUpDate;
 private Date returnDate;
 private Integer estimatedKm;
+private Double totalPrice;
+private Double priceAfterReturn;
 private Integer driver_id;
 private Integer vehicle_id;
 
-    public Reservation(Integer id, Date pickUpDate, Date returnDate, Integer estimatedKm,Integer driver_id, Integer vehicle_id) {
+    public Reservation(Integer id, Date pickUpDate, Date returnDate,Double totalPrice,Double priceAfterReturn, Integer estimatedKm,Integer driver_id, Integer vehicle_id) {
         this.id = id;
         this.pickUpDate = pickUpDate;
         this.returnDate = returnDate;
         this.estimatedKm= estimatedKm;
+        this.totalPrice = totalPrice;
+        this.priceAfterReturn = priceAfterReturn;
         this.driver_id = driver_id;
         this.vehicle_id = vehicle_id;
     }
@@ -32,6 +36,22 @@ private Integer vehicle_id;
 
     public Integer getEstimatedKm() {
         return estimatedKm;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public Double getPriceAfterReturn() {
+        return priceAfterReturn;
+    }
+
+    public void setPriceAfterReturn(Double priceAfterReturn) {
+        this.priceAfterReturn = priceAfterReturn;
     }
 
     public void setEstimatedKm(Integer estimatedKm) {

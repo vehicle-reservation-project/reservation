@@ -1,14 +1,10 @@
 package com.microservice.reservation.web.controller;
 
 
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.microservice.reservation.dao.IReservationDAO;
-import com.microservice.reservation.exceptions.ExceptionsReservation;
 import com.microservice.reservation.model.Reservation;
+import com.microservice.reservation.services.ReservationServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.temporal.ChronoUnit;
@@ -16,24 +12,19 @@ import java.util.Date;
 
 import static java.sql.DriverManager.getDriver;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/reservation")
 public class ReservationController {
     @Autowired
-    private IReservationDAO reservationDAO;
+    public IReservationDAO reservationDAO;
+
+    public Reservation reservation;
     @GetMapping
-    public Object listALLReservations(){
-        Iterable<Reservation> reservations = reservationDAO.findAll();
-
-        SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("");
-
-        FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
-
-        MappingJacksonValue reservationsFiltres = new MappingJacksonValue(reservations);
-
-        reservationsFiltres.setFilters(listDeNosFiltres);
-
-        return reservationsFiltres;
+    public List<Reservation> listALLReservations(){
+        List<Reservation> reservations = reservationDAO.findAll();
+        return reservations;
     }
 
 
@@ -58,11 +49,24 @@ public class ReservationController {
         return reservationDAO.deleteById(id);
     }
 
-    public void checkReservationInput(Reservation reservation){
-        if ((reservation.getPickUpDate().equals(""))||( reservation.getReturnDate().equals(""))){
-            throw new ExceptionsReservation();
-        }
+//    public void checkReservationInput(Reservation reservation){
+//        if ((reservation.getPickUpDate().equals(""))||( reservation.getReturnDate().equals(""))){return_date
+//            throw new ExceptionsReservation();
+//        }
+//    }
+
+    @PostMapping("/addPriceReser")
+    public Reservation addPriceReservation(@RequestBody Reservation reservation,int id){
+        reservation.setTotalPrice(ReservationServices.calculatePrice(id));
+        return reservationDAO.save(reservation);
     }
+
+
+
+
+
+
+
 
 
 
