@@ -12,18 +12,30 @@ public class Reservation {
 private Integer id;
 private Date pickUpDate;
 private Date returnDate;
+private Integer estimatedKm;
 private Integer driver_id;
 private Integer vehicle_id;
 
-    public Reservation(Integer id, Date pickUpDate, Date returnDate, Integer driver_id, Integer vehicle_id) {
+    public Reservation(Integer id, Date pickUpDate, Date returnDate, Integer estimatedKm,Integer driver_id, Integer vehicle_id) {
         this.id = id;
         this.pickUpDate = pickUpDate;
         this.returnDate = returnDate;
+        this.estimatedKm= estimatedKm;
         this.driver_id = driver_id;
         this.vehicle_id = vehicle_id;
     }
+
+
     public Reservation(){
 
+    }
+
+    public Integer getEstimatedKm() {
+        return estimatedKm;
+    }
+
+    public void setEstimatedKm(Integer estimatedKm) {
+        this.estimatedKm = estimatedKm;
     }
 
     public Integer getId() {
