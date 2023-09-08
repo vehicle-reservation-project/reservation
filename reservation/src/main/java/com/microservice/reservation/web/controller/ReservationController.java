@@ -2,22 +2,19 @@ package com.microservice.reservation.web.controller;
 
 
 import com.microservice.reservation.dao.IReservationDAO;
+import com.microservice.reservation.exceptions.ExceptionInputAge;
 import com.microservice.reservation.model.Reservation;
 import com.microservice.reservation.services.ReservationServices;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-
-import static java.sql.DriverManager.getDriver;
-
 import java.util.List;
+
+import static com.microservice.reservation.services.ReservationServices.driverAge;
 
 @RestController
 @RequestMapping("/reservation")
 public class ReservationController {
-    @Autowired
+    //@Autowired
     public IReservationDAO reservationDAO;
 
     public Reservation reservation;
@@ -30,11 +27,14 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     public Reservation listOneReservation(@PathVariable int id){
-          return reservationDAO.findById(id);
+        return reservationDAO.findById(id);
     }
 
-    @PostMapping
-    public Reservation addNewReservation(@RequestBody Reservation reservation){
+    @PostMapping("/{age}")
+    public Reservation addNewReservation(@RequestBody Reservation reservation, int id, @PathVariable int age){
+        if (driverAge(id)!=age || driverAge(id)<18){
+            throw new ExceptionInputAge();
+        }
         return reservationDAO.save(reservation);
     }
 
@@ -46,14 +46,10 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public Reservation deleteReservation(@PathVariable int id){
+
         return reservationDAO.deleteById(id);
     }
 
-//    public void checkReservationInput(Reservation reservation){
-//        if ((reservation.getPickUpDate().equals(""))||( reservation.getReturnDate().equals(""))){return_date
-//            throw new ExceptionsReservation();
-//        }
-//    }
 
     @PostMapping("/addPriceReser")
     public Reservation addPriceReservation(@RequestBody Reservation reservation,int id){
@@ -62,17 +58,21 @@ public class ReservationController {
     }
 
 
-
-
-
-
-
-
-
-
-
-
+    @GetMapping("/vehicleMaxHP/{age}")
+    public Reservation getVehicleFilterAge(@PathVariable int age){
+       ReservationServices.firstListVehicleFilterAge(age);
+        return (Reservation) reservationDAO.findAll();
+    }
 }
+
+//      @Query("SELECT  FROM Reservation r WHERE r.pick_up_date BETWEEN (:pickUpDesiredDate) AND (:returnDesiredDate) " +
+//            "OR  r.return_date BETWEEN  (:pickUpDesiredDate) AND (:returnDesiredDate) " +
+//            "OR r.pick_up_date < (:pickUpDesiredDate) AND r.return_date > (:returnDesiredDate)")
+//    List<Integer> getBusyVehicleID(Date pickUpDesiredDate, Date returnDesiredDate) {
+//        return null;
+//    }
+
+
 
 
 

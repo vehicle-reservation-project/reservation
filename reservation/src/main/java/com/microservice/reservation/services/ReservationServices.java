@@ -5,8 +5,6 @@ import com.microservice.reservation.model.Reservation;
 import com.microservice.reservation.model.Vehicle;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.temporal.ChronoUnit;
@@ -15,8 +13,8 @@ import java.util.List;
 
 
 @Service
-@RestController
-@RequestMapping("/postReservation")
+
+
 public class ReservationServices {
     public static double priceKmCar = 0.05;
 
@@ -36,9 +34,7 @@ public class ReservationServices {
         return vehicle;
     }
     public static Vehicle[] getVehicleMaxHp(int fiscalHPower){
-
         ResponseEntity<Vehicle[]> response = restTemplate.getForEntity("http://192.168.1.249:8080/vehicle/"+ fiscalHPower, Vehicle[].class);
-
         Vehicle[] vehicles = response.getBody();
         return  vehicles;
     }
@@ -65,17 +61,54 @@ public class ReservationServices {
         return ageDriver;
     }
 
-    public static List<Vehicle> listVehiclesFilterAge(int maxHp, int id){
-        long age=driverAge(id);
-        List<Vehicle> vehicles = List.of(getVehicleMaxHp(maxHp));
 
+
+    public static List<Vehicle> firstListVehicleFilterAge(int age){
+        List<Vehicle> vehicles;
         if (age<21 && age>18){
-            getVehicleMaxHp(8);
-        } else if (age<25 && age>25){
-            getVehicleMaxHp(13);
+            vehicles = List.of(getVehicleMaxHp(8));
+        } else if (age<25 && age>21){
+            vehicles = List.of(getVehicleMaxHp(13));
+        } else {
+            vehicles = List.of(getVehicleMaxHp(15));
         }
         return vehicles;
     }
+    public static List<Vehicle> listAvailableVehicles(Date enterDate, Date exitDate){
+        List<Vehicle> availableVehicles;
+//
+//        for (Integer id: reservation){
+//            if (id == getBusyVehicleID(reservation.setPickUpDate(enterDate), reservation.setReturnDate(exitDate))){
+//                getVehicle(id);
+//            }
+//        }
+
+return null;
+
+    }
+
+
+
+
+
+
+
+
+//    public static List<Vehicle> firstListVehicleFilterAge(int id){
+//        int age = (int) driverAge(id);
+//        List<Vehicle> vehicles;
+//        if (age<21 && age>18){
+//            vehicles = List.of(getVehicleMaxHp(8));
+//        } else if (age<25 && age>21){
+//            vehicles = List.of(getVehicleMaxHp(13));
+//        } else {
+//            vehicles = List.of(getVehicleMaxHp(15));
+//        }
+//        return vehicles;
+//    }
+
+
+
 
 
 
