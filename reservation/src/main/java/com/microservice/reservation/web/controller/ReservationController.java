@@ -13,11 +13,13 @@ import static com.microservice.reservation.services.ReservationServices.driverAg
 
 @RestController
 @RequestMapping("/reservation")
+
 public class ReservationController {
     //@Autowired
     public IReservationDAO reservationDAO;
 
     public Reservation reservation;
+
     @GetMapping
     public List<Reservation> listALLReservations(){
         List<Reservation> reservations = reservationDAO.findAll();
@@ -65,12 +67,6 @@ public class ReservationController {
     }
 }
 
-//      @Query("SELECT  FROM Reservation r WHERE r.pick_up_date BETWEEN (:pickUpDesiredDate) AND (:returnDesiredDate) " +
-//            "OR  r.return_date BETWEEN  (:pickUpDesiredDate) AND (:returnDesiredDate) " +
-//            "OR r.pick_up_date < (:pickUpDesiredDate) AND r.return_date > (:returnDesiredDate)")
-//    List<Integer> getBusyVehicleID(Date pickUpDesiredDate, Date returnDesiredDate) {
-//        return null;
-//    }
 
 
 

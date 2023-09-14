@@ -74,16 +74,6 @@ public class ReservationServices {
         }
         return vehicles;
     }
-    public static List<Vehicle> listAvailableVehicles(Date enterDate, Date exitDate){
-        List<Vehicle> availableVehicles;
-//
-//        for (Integer id: reservation){
-//            if (id == getBusyVehicleID(reservation.setPickUpDate(enterDate), reservation.setReturnDate(exitDate))){
-//                getVehicle(id);
-//            }
-//        }
-
-return null;
 
     }
 
@@ -114,7 +104,7 @@ return null;
 
 
 
-}
+
 
 
 
