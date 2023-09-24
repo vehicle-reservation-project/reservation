@@ -40,6 +40,29 @@ public class ReservationController {
         //return reservationDAO.save(reservation);
     //}
 
+    @GetMapping("/availableVehicle/{age}/{type}/{pickUpDate}/{returnDate}")
+    public List<Vehicle> listAvailableVehicles(@PathVariable int age, @PathVariable String type, @PathVariable Date pickUpDate, @PathVariable Date returnDate) {
+        List<Integer> notValidId = reservationDAO.getBusyVehicleID(pickUpDate, returnDate);
+        List<Vehicle> allVehicules = Arrays.stream(ReservationServices.getAllVehicles()).toList();
+        List<Vehicle> availableVehicles = new ArrayList<>();
+        for (Vehicle vehicle : allVehicules) {
+            if (!notValidId.contains(vehicle.getId())){
+                if (vehicle.getType().equals(type)){
+                    if (age<21 && age>=18 && vehicle.getFiscalHPower() < 8){
+                        availableVehicles.add(vehicle);
+                    }
+                    if (age<25 && age>=21 && vehicle.getFiscalHPower() < 13){
+                        availableVehicles.add(vehicle);
+                    }
+                    if(age>=25) {
+                        availableVehicles.add(vehicle);
+                    }
+                }
+            }
+        }
+        return availableVehicles;
+    }
+
     @PutMapping
     public Reservation editReservation(@RequestBody Reservation reservation, @PathVariable int id) {
         reservation.setId(id);
@@ -58,30 +81,7 @@ public class ReservationController {
     }
 
 
-    @GetMapping("/availableVehicle/{age}/{type}/{pickUpDate}/{returnDate}")
-    public List<Vehicle> getavailableVehicles(@PathVariable int age,@PathVariable String type,@PathVariable Date pickUpDate, @PathVariable Date returnDate) {
 
-        List<Integer> notValidId = reservationDAO.getBusyVehicleID(pickUpDate, returnDate);
-        List<Vehicle> allVehicules = Arrays.stream(ReservationServices.getAllVehicles()).toList();
-        List<Vehicle> availableVehicles = new ArrayList<>();
-
-        for (Vehicle vehicle : allVehicules) {
-            if (!notValidId.contains(vehicle.getId())){ // disponible
-                if (vehicle.getType().equals(type)){ //type
-                    if (age<21 && age>=18 && vehicle.getFiscalHPower() < 8){
-                        availableVehicles.add(vehicle);
-                    }
-                    if (age<25 && age>=21 && vehicle.getFiscalHPower() < 13){
-                        availableVehicles.add(vehicle);
-                    }
-                    if(age>=25) {
-                        availableVehicles.add(vehicle);
-                    }
-                }
-            }
-        }
-         return availableVehicles;
-    }
 
 
 

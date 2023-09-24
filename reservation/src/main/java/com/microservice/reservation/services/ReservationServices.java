@@ -9,7 +9,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.List;
 
 
 @Service
@@ -75,17 +74,18 @@ public class ReservationServices {
         return ageDriver;
     }
 
-    public static List<Vehicle> firstListVehicleFilterAge(int age){
-        List<Vehicle> vehicles;
-        if (age<21 && age>18){
-            vehicles = List.of(getVehicleMaxHp(8));
-        } else if (age<25 && age>21){
-            vehicles = List.of(getVehicleMaxHp(13));
-        } else {
-            vehicles = List.of(getVehicleMaxHp(15));
-        }
-        return vehicles;
-    }
+   // public static List<Vehicle> firstListVehicleFilterAge(int age){
+     //   List<Vehicle> vehicles;
+       // if (age<21 && age>18){
+         //   vehicles = List.of(getVehicleMaxHp(8));
+        //} else if (age<25 && age>21){
+          //  vehicles = List.of(getVehicleMaxHp(13));
+        //} else {
+          //  vehicles = List.of(getVehicleMaxHp(15));
+        //}
+        //return vehicles;
+    //}
+
 
 
 
