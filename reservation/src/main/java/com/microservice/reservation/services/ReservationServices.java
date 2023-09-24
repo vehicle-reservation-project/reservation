@@ -39,6 +39,20 @@ public class ReservationServices {
         return  vehicles;
     }
 
+    public static Vehicle[] getAllVehicles(){
+        ResponseEntity<Vehicle[]> response = restTemplate.getForEntity("http://192.168.1.249:8080/vehicle/",Vehicle[].class);
+        Vehicle[] vehicles = response.getBody();
+        return vehicles;
+    }
+
+    public static Vehicle[] getVehicleByType(String type){
+        ResponseEntity<Vehicle[]> response = restTemplate.getForEntity("http://192.168.1.249:8080/vehicle/"+ type, Vehicle[].class);
+        Vehicle[] vehicles = response.getBody();
+        return vehicles;
+    }
+
+
+
 
     public static double calculatePrice(int id) {
         double price;
@@ -61,8 +75,6 @@ public class ReservationServices {
         return ageDriver;
     }
 
-
-
     public static List<Vehicle> firstListVehicleFilterAge(int age){
         List<Vehicle> vehicles;
         if (age<21 && age>18){
@@ -75,6 +87,9 @@ public class ReservationServices {
         return vehicles;
     }
 
+
+
+
     }
 
 
@@ -82,20 +97,6 @@ public class ReservationServices {
 
 
 
-
-
-//    public static List<Vehicle> firstListVehicleFilterAge(int id){
-//        int age = (int) driverAge(id);
-//        List<Vehicle> vehicles;
-//        if (age<21 && age>18){
-//            vehicles = List.of(getVehicleMaxHp(8));
-//        } else if (age<25 && age>21){
-//            vehicles = List.of(getVehicleMaxHp(13));
-//        } else {
-//            vehicles = List.of(getVehicleMaxHp(15));
-//        }
-//        return vehicles;
-//    }
 
 
 
