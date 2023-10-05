@@ -4,7 +4,12 @@ import com.microservice.reservation.dao.IReservationDAO;
 import com.microservice.reservation.model.Reservation;
 import com.microservice.reservation.model.Vehicle;
 import com.microservice.reservation.services.ReservationServices;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,36 +20,31 @@ import java.util.List;
 @RequestMapping("/reservation")
 
 public class ReservationController {
-    //@Autowired
+    @Autowired
     public IReservationDAO reservationDAO;
 
-    public Reservation reservation;
 
     @GetMapping
     public List<Reservation> listALLReservations() {
-        List<Reservation> reservations = reservationDAO.findAll();
+        List<Reservation> reservations =reservationDAO.findAll();
         return reservations;
     }
-
 
     @GetMapping("/{id}")
     public Reservation listOneReservation(@PathVariable int id) {
         return reservationDAO.findById(id);
     }
 
-  //  @PostMapping("/{age}")
-    //public Reservation addNewReservation(@RequestBody Reservation reservation, int id, @PathVariable int age) {
-      //  if (driverAge(id) != age || driverAge(id) < 18) {
-        //    throw new ExceptionInputAge();
-        //}
-        //return reservationDAO.save(reservation);
-    //}
 
     @GetMapping("/availableVehicle/{age}/{type}/{pickUpDate}/{returnDate}")
-    public List<Vehicle> listAvailableVehicles(@PathVariable int age, @PathVariable String type, @PathVariable Date pickUpDate, @PathVariable Date returnDate) {
+    public List<Vehicle> listAvailableVehicles(@PathVariable int age, @PathVariable String type, @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date pickUpDate, @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date returnDate) {
+
         List<Integer> notValidId = reservationDAO.getBusyVehicleID(pickUpDate, returnDate);
+
         List<Vehicle> allVehicules = Arrays.stream(ReservationServices.getAllVehicles()).toList();
+
         List<Vehicle> availableVehicles = new ArrayList<>();
+
         for (Vehicle vehicle : allVehicules) {
             if (!notValidId.contains(vehicle.getId())){
                 if (vehicle.getType().equals(type)){
@@ -63,36 +63,28 @@ public class ReservationController {
         return availableVehicles;
     }
 
-    @PutMapping
-    public Reservation editReservation(@RequestBody Reservation reservation, @PathVariable int id) {
-        reservation.setId(id);
-        return reservationDAO.save(reservation);
-    }
-
-    @DeleteMapping("/{id}")
-    public Reservation deleteReservation(@PathVariable int id) {
-        return reservationDAO.deleteById(id);
-    }
-
-    @PostMapping("/addPriceReser")
-    public Reservation addPriceReservation(@RequestBody Reservation reservation, int id) {
-        reservation.setTotalPrice(ReservationServices.calculatePrice(id));
-        return reservationDAO.save(reservation);
-    }
 
 
 
 
+//    @PutMapping("/{id}")
+//    public Reservation editReservation(@RequestBody Reservation reservation, @PathVariable int id) {
+//        reservation.setId(id);
+//        return reservationDAO.save(reservation);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public Reservation deleteReservation(@PathVariable int id) {
+//        return reservationDAO.deleteById(id);
+//    }
+//
+//    @PostMapping("/addPriceReser")
+//    public Reservation addPriceReservation(@RequestBody Reservation reservation, int id) {
+//        reservation.setTotalPrice(ReservationServices.calculatePrice(id));
+//        return reservationDAO.save(reservation);
+//    }
 
 
-
-
-
-    //@GetMapping("/vehicleMaxHP/{age}")
-    //public Reservation getVehicleFilterAge(@PathVariable int age) {
-    //    ReservationServices.firstListVehicleFilterAge(age);
-      //  return (Reservation) reservationDAO.findAll();
-    //}
 
 }
 

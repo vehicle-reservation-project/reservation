@@ -12,16 +12,15 @@ import java.util.List;
 @Repository
 public interface IReservationDAO extends JpaRepository<Reservation, Integer> {
     Reservation save(Reservation reservation);
+
     Reservation findById(int id);
+
     Reservation deleteById(int id);
-
-
 
     @Query("SELECT r.id FROM Reservation r WHERE r.pickUpDate BETWEEN (:pickUpDesiredDate) AND (:returnDesiredDate) " +
             "OR  r.returnDate BETWEEN  (:pickUpDesiredDate) AND (:returnDesiredDate) " +
             "OR r.pickUpDate < (:pickUpDesiredDate) AND r.returnDate > (:returnDesiredDate)")
-     List<Integer> getBusyVehicleID(@Param("pickUpDesiredDate") Date pickUpDesiredDate,@Param("returnDesiredDate") Date returnDesiredDate) ;
-
-
-
+    List<Integer> getBusyVehicleID(@Param("pickUpDesiredDate") Date pickUpDesiredDate, @Param("returnDesiredDate") Date returnDesiredDate) ;
 }
+
+
